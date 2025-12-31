@@ -29,10 +29,29 @@ def loadEnvFromModule (moduleName : Name) : IO EnvLoadResult := do
 def getConstantNames (env : Environment) : Array Name :=
   env.constants.map₁.toList.map (·.1) |>.toArray
 
-/-- Filter constants based on config -/
+/-- Get the actual module that defined a constant -/
+def getModuleFor (env : Environment) (name : Name) : Option Name :=
+  match env.getModuleIdxFor? name with
+  | some idx => env.header.moduleNames[idx.toNat]?
+  | none => none
+
+/-- Check if a module name matches the target prefix -/
+def moduleMatchesPrefix (modName : Name) (prefix_ : Name) : Bool :=
+  modName == prefix_ || prefix_.isPrefixOf modName
+
+/-- Filter constants based on config and module origin -/
 def filterConstants (env : Environment) (config : Config) : Array (Name × ConstantInfo) :=
   env.constants.map₁.toList.toArray.filter fun (name, _) =>
-    config.shouldIncludeName name
+    -- First check config filters (private, internal, etc.)
+    if !config.shouldIncludeName name then false
+    else
+      -- Then check module origin if includeModules is specified
+      if config.includeModules.isEmpty then true
+      else
+        match getModuleFor env name with
+        | some modName =>
+          config.includeModules.any (moduleMatchesPrefix modName ·)
+        | none => false
 
 /-- Check if a name is a structure -/
 def isStructure (env : Environment) (name : Name) : Bool :=
@@ -60,12 +79,6 @@ def classifyConstant (env : Environment) (info : ConstantInfo) : ItemKind :=
   | .recInfo _ => .def_
   | .quotInfo _ => .axiom_
   | .opaqueInfo _ => .def_
-
-/-- Get module name for a declaration (best effort) -/
-def getModuleFor (_ : Environment) (name : Name) : Option Name :=
-  -- Use the prefix as module name approximation
-  if name.getPrefix.isAnonymous then none
-  else some name.getPrefix
 
 /-- Group declarations by their module -/
 def groupByModule (env : Environment) (constants : Array (Name × ConstantInfo))

@@ -3,6 +3,12 @@
 -/
 import Crucible
 import Docgen
+-- Integration tests
+import Tests.Integration.Helpers
+import Tests.Integration.StapleTests
+import Tests.Integration.ChronosTests
+
+namespace Tests.Unit
 
 open Crucible
 
@@ -69,6 +75,10 @@ test "itemToSearchEntry creates correct entry" := do
   entry.kind ≡ "def"
 
 #generate_tests
+
+end Tests.Unit
+
+open Crucible
 
 def main : IO UInt32 := do
   IO.println "Docgen Tests"
