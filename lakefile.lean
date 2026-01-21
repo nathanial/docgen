@@ -7,7 +7,7 @@ package docgen where
 require parlance from git "https://github.com/nathanial/parlance" @ "v0.0.1"
 require scribe from git "https://github.com/nathanial/scribe" @ "v0.0.2"
 require staple from git "https://github.com/nathanial/staple" @ "v0.0.2"
-require crucible from git "https://github.com/nathanial/crucible" @ "v0.0.7"
+require crucible from git "https://github.com/nathanial/crucible" @ "v0.0.8"
 
 @[default_target]
 lean_lib Docgen where
