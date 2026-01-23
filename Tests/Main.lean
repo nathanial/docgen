@@ -74,7 +74,7 @@ test "itemToSearchEntry creates correct entry" := do
   entry.module ≡ "Test.Module"
   entry.kind ≡ "def"
 
-#generate_tests
+
 
 end Tests.Unit
 

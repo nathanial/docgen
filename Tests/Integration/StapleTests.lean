@@ -104,6 +104,6 @@ test "generated HTML contains expected content" := do
   shouldContainSubstr indexContent "<!DOCTYPE html>"
   shouldContainSubstr indexContent "Staple"
 
-#generate_tests
+
 
 end Tests.Integration.Staple

@@ -122,6 +122,6 @@ test "includePrivate option includes more items" := do
   shouldSatisfy (countWithPrivate >= countNoPrivate)
     s!"includePrivate should include more or equal items ({countWithPrivate} >= {countNoPrivate})"
 
-#generate_tests
+
 
 end Tests.Integration.Chronos
